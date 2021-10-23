@@ -1,6 +1,7 @@
 # shopapp
 
-A new Flutter project.
+followup of "Flutter & Dart - The Complete Course"
+
 
 ## Getting Started
 
