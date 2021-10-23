@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopapp/Providers/cart.dart';
@@ -11,6 +14,43 @@ class CartItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dismissible(
       direction: DismissDirection.endToStart,
+      confirmDismiss: (direction) {
+        return showDialog(
+            context: context,
+            builder: (ctx) => Platform.isIOS
+                ? CupertinoAlertDialog(
+                    title: Text("Are you sure?"),
+                    content: Text("Do you want to remove this item from cart?"),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            Navigator.of(ctx).pop(false);
+                          },
+                          child: Text("No")),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.of(ctx).pop(true);
+                          },
+                          child: Text("Yes")),
+                    ],
+                  )
+                : AlertDialog(
+                    title: Text("Are you sure?"),
+                    content: Text("Do you want to remove this item from cart?"),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            Navigator.of(ctx).pop(false);
+                          },
+                          child: Text("No")),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.of(ctx).pop(true);
+                          },
+                          child: Text("Yes")),
+                    ],
+                  ));
+      },
       onDismissed: (direction) {
         var cart = Provider.of<Cart>(context, listen: false);
         cart.removeItem(id);
