@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:shopapp/Providers/product.dart';
-class Products with ChangeNotifier{
 
-
+class Products with ChangeNotifier {
   List<Product> _items = [
     Product(
       id: 'p1',
@@ -11,7 +10,7 @@ class Products with ChangeNotifier{
       description: 'A red shirt - it is pretty red!',
       price: 29.99,
       imageURL:
-      'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
+          'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
     ),
     Product(
       id: 'p2',
@@ -19,7 +18,7 @@ class Products with ChangeNotifier{
       description: 'A nice pair of trousers.',
       price: 59.99,
       imageURL:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
     ),
     Product(
       id: 'p3',
@@ -27,7 +26,7 @@ class Products with ChangeNotifier{
       description: 'Warm and cozy - exactly what you need for the winter.',
       price: 19.99,
       imageURL:
-      'https://live.staticflickr.com/4043/4438260868_cc79b3369d_z.jpg',
+          'https://live.staticflickr.com/4043/4438260868_cc79b3369d_z.jpg',
     ),
     Product(
       id: 'p4',
@@ -35,16 +34,37 @@ class Products with ChangeNotifier{
       description: 'Prepare any meal you want.',
       price: 49.99,
       imageURL:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
     ),
   ];
 
-  List<Product> get items{
+  List<Product> get items {
     return [..._items];
   }
 
-  List<Product> get favorites{
+  List<Product> get favorites {
     return _items.where((element) => element.isFavorite).toList();
   }
 
+  Product findProductByID(String id) {
+    return _items.firstWhere((element) => element.id == id);
+  }
+
+  void addItems(Product product) {
+    _items.add(Product(
+        id: DateTime.now().toString(),
+        description: product.description,
+        imageURL: product.imageURL,
+        title: product.title,
+        price: product.price));
+    notifyListeners();
+  }
+
+  void updateItem(String id, Product product) {
+    final productIndex = _items.indexWhere((element) => element.id == id);
+    if (productIndex >= 0) {
+      _items[productIndex] = product;
+      notifyListeners();
+    }
+  }
 }
