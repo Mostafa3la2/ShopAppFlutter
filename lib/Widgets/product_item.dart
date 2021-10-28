@@ -35,7 +35,17 @@ class ProductItem extends StatelessWidget {
                     icon: product.isFavorite
                         ? Icon(Icons.favorite)
                         : Icon(Icons.favorite_border_outlined),
-                    onPressed: product.toggleFavorite,
+                    onPressed: () async {
+                      try {
+                        await product.toggleFavorite();
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(
+                          "something went wrong",
+                          textAlign: TextAlign.center,
+                        )));
+                      }
+                    },
                     color: Theme.of(context).colorScheme.secondary)),
             title: FittedBox(
               fit: BoxFit.scaleDown,

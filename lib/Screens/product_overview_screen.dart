@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
+import 'package:shopapp/Providers/products_provider.dart';
 import 'package:shopapp/Screens/app_drawer.dart';
 import 'package:shopapp/Screens/cart_screen.dart';
 import '../Widgets/badge.dart';
@@ -16,6 +17,46 @@ class ProductOverViewScreen extends StatefulWidget {
 
 class _ProductOverViewScreenState extends State<ProductOverViewScreen> {
   bool _showFavorites = false;
+  bool _isLoading = false;
+  bool _isInit = true;
+
+  Future<void> _pullToRefresh() async {
+    await Provider.of<Products>(context, listen: false).fetchAndSetProducts();
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<Products>(context).fetchAndSetProducts().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      }).catchError((error) {
+        setState(() {
+          _isLoading = false;
+        });
+        showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+                    title: Text("An Error Occured"),
+                    content: Text(error.toString()),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text("dismiss"))
+                    ]));
+      });
+    }
+    _isInit = false;
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,7 +97,14 @@ class _ProductOverViewScreenState extends State<ProductOverViewScreen> {
           )
         ],
       ),
-      body: ProductsGrid(_showFavorites),
+      body: _isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : RefreshIndicator(
+              child: ProductsGrid(_showFavorites),
+              onRefresh: _pullToRefresh,
+            ),
     );
   }
 }
