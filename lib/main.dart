@@ -31,14 +31,16 @@ class MyApp extends StatelessWidget {
             update: (ctx, auth, previousProducts) => Products(
                 auth.token,
                 auth.userID,
-                previousProducts != null ? previousProducts!.items : []),
+                previousProducts != null ? previousProducts.items : []),
             create: (ctx) => Products.c(),
           ),
           ChangeNotifierProvider(
             create: (ctx) => Cart(),
           ),
           ChangeNotifierProxyProvider<Auth, Orders>(
-            update: (ctx, auth, previousOrders) => Orders(auth.token,
+            update: (ctx, auth, previousOrders) => Orders(
+                auth.token,
+                auth.userID,
                 previousOrders != null ? previousOrders!.orders : []),
             create: (ctx) => Orders.c(),
           ),
@@ -51,7 +53,18 @@ class MyApp extends StatelessWidget {
                           primarySwatch: Colors.deepPurple,
                           accentColor: Colors.amberAccent),
                       fontFamily: 'Lato'),
-                  home: auth.isAuth ? ProductOverViewScreen() : AuthScreen(),
+                  home: auth.isAuth
+                      ? ProductOverViewScreen()
+                      : FutureBuilder(
+                          future: auth.tryAutoLogin(),
+                          builder: (ctx, authSnapShot) =>
+                              authSnapShot.connectionState ==
+                                      ConnectionState.waiting
+                                  ? Scaffold(
+                                      body: Center(
+                                      child: CircularProgressIndicator(),
+                                    ))
+                                  : AuthScreen()),
                   routes: {
                     //ProductDetailsScreen.routeName: (ctx) =>ProductDetailsScreen(),
                     AuthScreen.routeName: (ctx) => AuthScreen(),

@@ -35,6 +35,7 @@ class Products with ChangeNotifier {
             "description": product.description!,
             "price": product.price!,
             "imageURL": product.imageURL!,
+            "creatorId": userID
           }));
       _items.add(Product(
           id: json.decode(response.body)["name"],
@@ -44,7 +45,6 @@ class Products with ChangeNotifier {
           price: product.price));
       notifyListeners();
     } catch (error) {
-      print(error.toString());
       throw error;
     }
   }
@@ -84,9 +84,11 @@ class Products with ChangeNotifier {
     }
   }
 
-  Future<void> fetchAndSetProducts() async {
+  Future<void> fetchAndSetProducts([bool filterByUser = false]) async {
+    String filterString =
+        filterByUser ? 'orderBy="creatorId"&equalTo="${userID!}"' : '';
     var url = Uri.parse(
-        "https://shopappflutter-5a9f2-default-rtdb.europe-west1.firebasedatabase.app/product.json?auth=${(authToken) ?? ""}");
+        'https://shopappflutter-5a9f2-default-rtdb.europe-west1.firebasedatabase.app/product.json?auth=${authToken}&$filterString');
     try {
       final response = await http.get(url);
       final List<Product> loadedProducts = [];
