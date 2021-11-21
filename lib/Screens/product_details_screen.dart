@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shopapp/Providers/auth.dart';
 import 'package:shopapp/Providers/cart.dart';
 import 'package:shopapp/Providers/product.dart';
 import 'package:shopapp/Providers/products_provider.dart';
@@ -19,6 +20,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   Widget build(BuildContext context) {
     //final productID = ModalRoute.of(context)!.settings.arguments as String;
     final cart = Provider.of<Cart>(context, listen: false);
+    final auth = Provider.of<Auth>(context, listen: false);
+
     final myproduct = Provider.of<Product>(context, listen: false);
     final selectedProductData = Provider.of<Products>(context)
         .items
@@ -50,7 +53,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         icon: product.isFavorite
                             ? Icon(Icons.favorite)
                             : Icon(Icons.favorite_border_outlined),
-                        onPressed: product.toggleFavorite,
+                        onPressed: () => {
+                              product.toggleFavorite(
+                                  auth.token ?? "", auth.userID)
+                            },
                         color: Theme.of(context).colorScheme.secondary)),
                 SizedBox(
                   width: 50,

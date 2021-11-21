@@ -11,6 +11,8 @@ import 'package:shopapp/Widgets/products_grid.dart';
 enum PopupMenu { Favorites, All }
 
 class ProductOverViewScreen extends StatefulWidget {
+  static const String routeName = "/home";
+
   @override
   State<ProductOverViewScreen> createState() => _ProductOverViewScreenState();
 }
