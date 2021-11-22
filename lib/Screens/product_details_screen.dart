@@ -28,16 +28,26 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         .firstWhere((element) => element.id == widget.productID);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(selectedProductData.title!),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              child: Image.network(selectedProductData.imageURL!),
-              height: 300,
+      // appBar: AppBar(
+      //   title: Text(selectedProductData.title!),
+      // ),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 300,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text(selectedProductData.title!),
+              background: Hero(
+                  tag: myproduct.id!,
+                  child: Image.network(
+                    selectedProductData.imageURL!,
+                    fit: BoxFit.cover,
+                  )),
             ),
+          ),
+          SliverList(
+              delegate: SliverChildListDelegate([
             SizedBox(
               height: 30,
             ),
@@ -72,8 +82,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             ),
             SizedBox(height: 30),
             Text(myproduct.description!)
-          ],
-        ),
+          ]))
+        ],
       ),
     );
   }
