@@ -11,6 +11,7 @@ import 'package:shopapp/Screens/orders_screen.dart';
 import 'package:shopapp/Screens/product_overview_screen.dart';
 import 'package:shopapp/Screens/product_details_screen.dart';
 import 'package:shopapp/Screens/user_products_screen.dart';
+import 'package:shopapp/helpers/custom_route.dart';
 import 'Providers/product.dart';
 import 'Providers/products_provider.dart';
 
@@ -52,7 +53,11 @@ class MyApp extends StatelessWidget {
                       colorScheme: ColorScheme.fromSwatch(
                           primarySwatch: Colors.deepPurple,
                           accentColor: Colors.amberAccent),
-                      fontFamily: 'Lato'),
+                      fontFamily: 'Lato',
+                      pageTransitionsTheme: PageTransitionsTheme(builders: {
+                        TargetPlatform.android: CustomPageTransitionBuilder(),
+                        TargetPlatform.iOS: CustomPageTransitionBuilder()
+                      })),
                   home: auth.isAuth
                       ? ProductOverViewScreen()
                       : FutureBuilder(

@@ -34,6 +34,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
+            iconTheme: IconThemeData(color: Colors.black),
             expandedHeight: 300,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
